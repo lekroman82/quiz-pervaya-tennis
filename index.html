@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Тест: Вам говорили, что теннис — это дорого и не для вас?</title>
+<meta name="description" content="Узнайте за 4 вопроса, подходит ли вам теннис на самом деле. Бесплатный тест за 2 минуты. Школа тенниса «Первая».">
+<meta property="og:title" content="Тест: Вам говорили, что теннис — это дорого и не для вас?">
+<meta property="og:description" content="8 из 10 учеников думали так же. Пройдите тест — результат удивит.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta name="theme-color" content="#ffffff">
+<meta name="format-detection" content="telephone=no">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎾</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #FFFFFF;
+  --bg-gray: #F5F5F5;
+  --text: #1A1A1A;
+  --text-secondary: #6B7280;
+  --text-light: #9CA3AF;
+  --border: #E5E7EB;
+  --accent: #C45A30;
+  --accent-hover: #A84B27;
+  --highlight: #FFCDD2;
+  --selected-bg: #E3F2FD;
+  --selected-border: #90CAF9;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+
+/* ===== SCREENS ===== */
+.screen { display: none; min-height: 100vh; min-height: 100dvh; }
+.screen.active { display: flex; flex-direction: column; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes confettiFall {
+  0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+/* ===== START SCREEN ===== */
+.start-inner {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 32px 20px 40px;
+  text-align: center;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1.5px solid var(--border);
+  border-radius: 100px;
+  padding: 8px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 28px;
+}
+
+.start-inner h1 {
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1.18;
+  margin-bottom: 18px;
+  letter-spacing: -0.02em;
+  text-align: center;
+}
+
+.hl {
+  background: linear-gradient(180deg, transparent 58%, var(--highlight) 58%);
+  padding: 0 3px;
+}
+
+.start-sub {
+  font-family: 'Manrope', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.start-desc {
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--text-secondary);
+  margin-bottom: 32px;
+  max-width: 420px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Stats */
+.stats {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 32px;
+  text-align: left;
+  max-width: 440px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.stat-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.stat-row .ico {
+  width: 28px;
+  text-align: center;
+  flex-shrink: 0;
+  font-size: 16px;
+}
+
+/* Reviews 2-col */
+.reviews-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.rv-card {
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  text-align: left;
+}
+
+.rv-text {
+  font-size: 14px;
+  font-style: italic;
+  line-height: 1.6;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+
+.rv-author {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.rv-author strong {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* Counter */
+.counter {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 18px;
+}
+.counter strong { color: var(--text); font-weight: 700; }
+
+/* CTA */
+.cta-btn {
+  display: block;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto 12px;
+  padding: 18px 24px;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--accent);
+  color: #fff;
+  font-family: 'Manrope', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.cta-btn:hover { background: var(--accent-hover); }
+
+.cta-note {
+  font-size: 13px;
+  color: var(--text-light);
+  margin-bottom: 32px;
+}
+
+.motivator {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+
+/* Learn section */
+.learn-block {
+  border-top: 1px solid var(--border);
+  padding-top: 24px;
+  text-align: left;
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+.learn-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-light);
+  margin-bottom: 16px;
+}
+
+.learn-items {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.learn-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.learn-item .ico { font-size: 16px; flex-shrink: 0; }
+
+/* ===== QUESTION NAV BAR ===== */
+.q-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 20px 0;
+}
+
+.q-nav-inner {
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.q-nav-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.q-back {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+}
+.q-back:hover { color: var(--text-secondary); }
+
+.q-step-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.q-progress {
+  width: 100%;
+  height: 3px;
+  background: var(--border);
+  border-radius: 100px;
+  overflow: hidden;
+}
+
+.q-progress-fill {
+  height: 100%;
+  background: var(--text);
+  border-radius: 100px;
+  transition: width 0.3s ease;
+}
+
+/* ===== QUESTION CONTENT ===== */
+.q-content {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 32px 20px 40px;
+  flex: 1;
+  animation: fadeIn 0.3s ease;
+}
+
+.q-content h2 {
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+
+.q-hint {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 28px;
+}
+
+/* Answer grid 2x2 */
+.answers-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.a-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 14px;
+  background: var(--bg-gray);
+  border: 2px solid transparent;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 0.15s;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.a-card:hover {
+  background: #EBF0F5;
+}
+
+.a-card.selected {
+  background: var(--selected-bg);
+  border-color: var(--selected-border);
+}
+
+.a-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.a-text {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--text);
+}
+
+/* ===== RESULT SCREEN ===== */
+.result-wrap {
+  background: var(--bg-gray);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.result-inner {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 36px 20px 40px;
+  text-align: center;
+  animation: fadeIn 0.35s ease;
+}
+
+.result-badge {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+  margin-bottom: 14px;
+}
+
+.result-inner h2 {
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+.result-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 28px;
+}
+
+/* Gift cards */
+.gift {
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  background: var(--bg);
+  text-align: left;
+  margin-bottom: 12px;
+}
+
+.gift-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.gift-ico {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--bg-gray);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.gift h3 {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.35;
+  padding-top: 2px;
+}
+
+.gift p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+.gift-author {
+  font-size: 12px;
+  font-style: italic;
+  color: var(--text-light);
+}
+
+/* Form */
+.form-area { margin-top: 20px; text-align: left; }
+
+.f-group { margin-bottom: 10px; }
+
+.f-input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.15s;
+}
+.f-input::placeholder { color: var(--text-light); }
+.f-input:focus { border-color: var(--text-secondary); }
+.f-input.error { border-color: #EF4444; }
+
+.f-error {
+  font-size: 12px;
+  color: #EF4444;
+  margin-top: 4px;
+  display: none;
+}
+.f-error.visible { display: block; }
+
+.f-submit {
+  width: 100%;
+  padding: 18px;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--accent);
+  color: #fff;
+  font-family: 'Manrope', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+  margin-top: 6px;
+}
+.f-submit:hover { background: var(--accent-hover); }
+.f-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.f-privacy {
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-light);
+  margin-top: 12px;
+  line-height: 1.5;
+}
+
+/* ===== FINAL SCREEN ===== */
+.final-inner {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 60px 20px 40px;
+  text-align: center;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.4s ease;
+}
+
+.final-icon { font-size: 56px; margin-bottom: 24px; }
+
+.final-inner h1 {
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.25;
+  margin-bottom: 12px;
+}
+
+.final-inner p {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 32px;
+  max-width: 380px;
+}
+
+.tg-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 18px 32px;
+  background: #2AABEE;
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-family: 'Manrope', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+  text-decoration: none;
+  width: 100%;
+  max-width: 380px;
+}
+.tg-btn:hover { background: #229ED9; }
+.tg-btn svg { width: 22px; height: 22px; fill: #fff; }
+
+.final-note {
+  font-size: 12px;
+  color: var(--text-light);
+  margin-top: 14px;
+}
+
+/* Confetti */
+.confetti-piece {
+  position: fixed;
+  top: -20px;
+  z-index: 9999;
+  pointer-events: none;
+  animation: confettiFall linear forwards;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (min-width: 640px) {
+  .start-inner h1 { font-size: 40px; }
+  .q-content h2 { font-size: 30px; }
+}
+
+@media (max-width: 480px) {
+  .reviews-row { grid-template-columns: 1fr; }
+  .answers-grid { grid-template-columns: 1fr; }
+  .start-inner h1 { font-size: 27px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== START SCREEN ==================== -->
+<div class="screen active" id="screen-start">
+  <div class="start-inner">
+
+    <div class="badge">🎾 Бесплатный тест — 2 минуты</div>
+
+    <h1>Вам когда-нибудь говорили, что теннис —<br><span class="hl">это дорого и не для вас</span>?</h1>
+
+    <div class="start-sub">Они были неправы.</div>
+    <p class="start-desc">Узнайте за 4 вопроса, подходит ли вам теннис на самом деле и что нужно, чтобы начать играть уже на этой неделе.</p>
+
+    <div class="stats">
+      <div class="stat-row"><span class="ico">📊</span> 8 из 10 наших учеников были уверены, что теннис им не по карману</div>
+      <div class="stat-row"><span class="ico">⭐</span> 89% учеников остаются после первой тренировки</div>
+      <div class="stat-row"><span class="ico">🎾</span> Уверенно бьют по мячу уже через 3 занятия</div>
+    </div>
+
+    <div class="reviews-row">
+      <div class="rv-card">
+        <div class="rv-text">«Была уверена, что теннис — для богатых. Оказалось дешевле, чем бассейн с робототехникой. А сын теперь сам просится на корт»</div>
+        <div class="rv-author"><strong>Ольга</strong> · мама ученика, 4 месяца</div>
+      </div>
+      <div class="rv-card">
+        <div class="rv-text">«Мне 34, ни разу не держала ракетку. Боялась, что буду выглядеть глупо. Через месяц уже играла с мужем по выходным»</div>
+        <div class="rv-author"><strong>Марина</strong> · ученица 5 месяцев</div>
+      </div>
+    </div>
+
+    <div class="counter">Уже прошли тест: <strong>1 247 человек</strong></div>
+
+    <button class="cta-btn" onclick="startQuiz()">Пройти тест бесплатно</button>
+    <div class="cta-note">Мы не будем звонить. Результат — сразу на экране.</div>
+
+    <p class="motivator">Сотни людей начинают играть в теннис у нас не только в детском возрасте, но и после 25, 35, 50 лет.<br>Может, ваша очередь?</p>
+
+    <div class="learn-block">
+      <div class="learn-title">Вы узнаете в конце теста</div>
+      <div class="learn-items">
+        <div class="learn-item"><span class="ico">🎾</span> Подходит ли вам теннис на самом деле</div>
+        <div class="learn-item"><span class="ico">🎬</span> Видеоразбор «5 мифов о теннисе» от тренера</div>
+        <div class="learn-item"><span class="ico">📋</span> Гайд «Как начать с нуля в вашем городе»</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ==================== Q1 ==================== -->
+<div class="screen" id="screen-q1">
+  <div class="q-nav">
+    <div class="q-nav-inner">
+      <div class="q-nav-top">
+        <button class="q-back" onclick="goBack(0)">← Назад</button>
+        <span class="q-step-label">Шаг 1 из 4</span>
+      </div>
+      <div class="q-progress"><div class="q-progress-fill" style="width:25%"></div></div>
+    </div>
+  </div>
+  <div class="q-content">
+    <h2>Вам когда-нибудь говорили, что теннис — не для вас?</h2>
+    <p class="q-hint">Честно — это важно для вашего результата</p>
+    <div class="answers-grid">
+      <div class="a-card" onclick="pick(this,1)" data-v="expensive">
+        <div class="a-icon">💸</div>
+        <div class="a-text">Да — казалось, что это дорого и не для нашей семьи</div>
+      </div>
+      <div class="a-card" onclick="pick(this,1)" data-v="others_said">
+        <div class="a-icon">❤️</div>
+        <div class="a-text">Да — кто-то из знакомых или сам(а) так думал(а)</div>
+      </div>
+      <div class="a-card" onclick="pick(this,1)" data-v="hesitant">
+        <div class="a-icon">😐</div>
+        <div class="a-text">Нет, но всё равно не решался(ась) попробовать</div>
+      </div>
+      <div class="a-card" onclick="pick(this,1)" data-v="never">
+        <div class="a-icon">💪</div>
+        <div class="a-text">Нет — просто никогда не пробовал(а)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== Q2 ==================== -->
+<div class="screen" id="screen-q2">
+  <div class="q-nav">
+    <div class="q-nav-inner">
+      <div class="q-nav-top">
+        <button class="q-back" onclick="goBack(1)">← Назад</button>
+        <span class="q-step-label">Шаг 2 из 4</span>
+      </div>
+      <div class="q-progress"><div class="q-progress-fill" style="width:50%"></div></div>
+    </div>
+  </div>
+  <div class="q-content">
+    <h2>Что привело вас к нам именно сейчас?</h2>
+    <p class="q-hint">Обычно есть один момент, который всё меняет</p>
+    <div class="answers-grid">
+      <div class="a-card" onclick="pick(this,2)" data-v="saw">
+        <div class="a-icon">🎾</div>
+        <div class="a-text">Увидел(а), как кто-то играет — и захотелось тоже</div>
+      </div>
+      <div class="a-card" onclick="pick(this,2)" data-v="friends">
+        <div class="a-icon">👥</div>
+        <div class="a-text">Друзья или коллеги играют — хочу с ними</div>
+      </div>
+      <div class="a-card" onclick="pick(this,2)" data-v="child">
+        <div class="a-icon">👶</div>
+        <div class="a-text">Ищу секцию для ребёнка — теннис в списке</div>
+      </div>
+      <div class="a-card" onclick="pick(this,2)" data-v="dream">
+        <div class="a-icon">⭐</div>
+        <div class="a-text">Просто давно мечтал(а) — и решился(-ась)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== Q3 ==================== -->
+<div class="screen" id="screen-q3">
+  <div class="q-nav">
+    <div class="q-nav-inner">
+      <div class="q-nav-top">
+        <button class="q-back" onclick="goBack(2)">← Назад</button>
+        <span class="q-step-label">Шаг 3 из 4</span>
+      </div>
+      <div class="q-progress"><div class="q-progress-fill" style="width:75%"></div></div>
+    </div>
+  </div>
+  <div class="q-content">
+    <h2>Что останавливает прямо сейчас?</h2>
+    <p class="q-hint">Мы подготовимся к вашему первому визиту заранее</p>
+    <div class="answers-grid">
+      <div class="a-card" onclick="pick(this,3)" data-v="price">
+        <div class="a-icon">💰</div>
+        <div class="a-text">Боюсь, что это дорого</div>
+      </div>
+      <div class="a-card" onclick="pick(this,3)" data-v="late">
+        <div class="a-icon">🙄</div>
+        <div class="a-text">Думаю, что мне уже поздно начинать</div>
+      </div>
+      <div class="a-card" onclick="pick(this,3)" data-v="shy">
+        <div class="a-icon">🫣</div>
+        <div class="a-text">Стесняюсь — я же полный новичок</div>
+      </div>
+      <div class="a-card" onclick="pick(this,3)" data-v="nothing">
+        <div class="a-icon">💪</div>
+        <div class="a-text">Ничего — хочу начать как можно скорее!</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== Q4 ==================== -->
+<div class="screen" id="screen-q4">
+  <div class="q-nav">
+    <div class="q-nav-inner">
+      <div class="q-nav-top">
+        <button class="q-back" onclick="goBack(3)">← Назад</button>
+        <span class="q-step-label">Шаг 4 из 4</span>
+      </div>
+      <div class="q-progress"><div class="q-progress-fill" style="width:100%"></div></div>
+    </div>
+  </div>
+  <div class="q-content">
+    <h2>Для кого присматриваете теннис?</h2>
+    <p class="q-hint">Подберём формат под ваш случай</p>
+    <div class="answers-grid">
+      <div class="a-card" onclick="pick(this,4)" data-v="self">
+        <div class="a-icon">🧑</div>
+        <div class="a-text">Для себя</div>
+      </div>
+      <div class="a-card" onclick="pick(this,4)" data-v="child">
+        <div class="a-icon">👧</div>
+        <div class="a-text">Для ребёнка</div>
+      </div>
+      <div class="a-card" onclick="pick(this,4)" data-v="teen">
+        <div class="a-icon">🤸</div>
+        <div class="a-text">Для подростка</div>
+      </div>
+      <div class="a-card" onclick="pick(this,4)" data-v="family">
+        <div class="a-icon">👨‍👩‍👧</div>
+        <div class="a-text">Для всей семьи</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== RESULT (form + gifts) ==================== -->
+<div class="screen" id="screen-result">
+  <div class="result-wrap">
+    <div class="result-inner">
+      <div class="result-badge">🎁 почти готово</div>
+      <h2>Ваш разбор готов — и мы добавили 2 подарка</h2>
+      <p class="result-desc">Оставьте контакты — отправим всё в Telegram за 2 минуты</p>
+
+      <div class="gift">
+        <div class="gift-header">
+          <div class="gift-ico">🎬</div>
+          <h3>Видеоразбор: 5 мифов о теннисе, которые мешают начать</h3>
+        </div>
+        <p>Тренер на камеру разбирает популярные заблуждения. 10 минут — и вы посмотрите на теннис по-другому</p>
+        <div class="gift-author">от Алексея Петрова, тренер 8 лет</div>
+      </div>
+
+      <div class="gift">
+        <div class="gift-header">
+          <div class="gift-ico">🎾</div>
+          <h3>Гайд: Как начать играть в теннис с нуля</h3>
+        </div>
+        <p>Что реально нужно купить (спойлер: почти ничего), сколько стоит, куда прийти и с чего начать</p>
+        <div class="gift-author">от Елены Смирновой, тренер 6 лет</div>
+      </div>
+
+      <form class="form-area" id="leadForm" onsubmit="return send(event)">
+        <div class="f-group">
+          <input type="text" class="f-input" id="inName" placeholder="Как вас зовут?" autocomplete="given-name" required>
+          <div class="f-error" id="errName">Введите имя</div>
+        </div>
+        <div class="f-group">
+          <input type="tel" class="f-input" id="inPhone" placeholder="+7 (___) ___-__-__" autocomplete="tel" required>
+          <div class="f-error" id="errPhone">Введите корректный номер</div>
+        </div>
+        <button type="submit" class="f-submit" id="btnSend">🎁 Получить разбор + 2 подарка</button>
+      </form>
+
+      <p class="f-privacy">Нажимая кнопку, вы соглашаетесь на обработку персональных данных. Мы не звоним и не шлём спам.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== FINAL ==================== -->
+<div class="screen" id="screen-final">
+  <div class="final-inner">
+    <div class="final-icon">🎉</div>
+    <h1>Отлично! Подарки уже ждут</h1>
+    <p>Нажмите кнопку — наш помощник в Telegram отправит видеоразбор, гайд и персональный разбор. А ещё ответит на любые вопросы о теннисе.</p>
+    <a href="#" id="tgLink" class="tg-btn" target="_blank">
+      <svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+      Забрать подарки в Telegram
+    </a>
+    <p class="final-note">Бот ответит мгновенно — 24/7</p>
+  </div>
+</div>
+
+<script>
+const ans = {};
+const TG = 'https://t.me/Roman_Lekomtsev';
+
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+function startQuiz() { show('screen-q1'); }
+
+function goBack(from) {
+  if (from === 0) show('screen-start');
+  else if (from === 4) show('screen-q4');
+  else show('screen-q' + from);
+}
+
+function pick(card, q) {
+  card.parentElement.querySelectorAll('.a-card').forEach(c => c.classList.remove('selected'));
+  card.classList.add('selected');
+  ans[q] = card.dataset.v;
+  setTimeout(() => {
+    if (q < 4) show('screen-q' + (q + 1));
+    else show('screen-result');
+  }, 300);
+}
+
+// Phone mask
+const ph = document.getElementById('inPhone');
+ph.addEventListener('input', function() {
+  let v = this.value.replace(/\D/g, '');
+  if (!v.length) { this.value = ''; return; }
+  if (v[0] === '8') v = '7' + v.substring(1);
+  if (v[0] !== '7') v = '7' + v;
+  let f = '+7';
+  if (v.length > 1) f += ' (' + v.substring(1, 4);
+  if (v.length >= 4) f += ') ' + v.substring(4, 7);
+  if (v.length >= 7) f += '-' + v.substring(7, 9);
+  if (v.length >= 9) f += '-' + v.substring(9, 11);
+  this.value = f;
+});
+ph.addEventListener('focus', function() { if (!this.value) this.value = '+7'; });
+ph.addEventListener('keydown', function(e) {
+  if (e.key === 'Backspace' && this.value.length <= 3) { e.preventDefault(); this.value = ''; }
+});
+
+// Submit
+function send(e) {
+  e.preventDefault();
+  const name = document.getElementById('inName').value.trim();
+  const phone = document.getElementById('inPhone').value.trim();
+  const digits = phone.replace(/\D/g, '');
+  let ok = true;
+
+  if (!name || name.length < 2) {
+    document.getElementById('inName').classList.add('error');
+    document.getElementById('errName').classList.add('visible');
+    ok = false;
+  } else {
+    document.getElementById('inName').classList.remove('error');
+    document.getElementById('errName').classList.remove('visible');
+  }
+
+  if (digits.length < 11) {
+    document.getElementById('inPhone').classList.add('error');
+    document.getElementById('errPhone').classList.add('visible');
+    ok = false;
+  } else {
+    document.getElementById('inPhone').classList.remove('error');
+    document.getElementById('errPhone').classList.remove('visible');
+  }
+
+  if (!ok) return false;
+
+  const btn = document.getElementById('btnSend');
+  btn.disabled = true;
+  btn.textContent = 'Отправляем...';
+
+  const L = {
+    1: { expensive: 'Казалось дорого', others_said: 'Кто-то говорил так', hesitant: 'Не решался попробовать', never: 'Просто не пробовал' },
+    2: { saw: 'Увидел как играют', friends: 'Друзья зовут', child: 'Ищу для ребёнка', dream: 'Давно мечтал' },
+    3: { price: 'Боюсь что дорого', late: 'Думаю что поздно', shy: 'Стесняюсь', nothing: 'Ничего не останавливает' },
+    4: { self: 'Для себя', child: 'Для ребёнка', teen: 'Для подростка', family: 'Для семьи' }
+  };
+
+  const lb = (q, v) => (L[q] && L[q][v]) || v || '—';
+
+  const msg = encodeURIComponent(
+    `Привет! Меня зовут ${name}, я прошёл(а) тест на сайте.\n` +
+    `📱 Телефон: ${phone}\n` +
+    `Хочу получить подарки (видеоразбор + гайд новичка).\n\n` +
+    `Мои ответы:\n` +
+    `• ${lb(1, ans[1])}\n` +
+    `• ${lb(2, ans[2])}\n` +
+    `• ${lb(3, ans[3])}\n` +
+    `• ${lb(4, ans[4])}`
+  );
+
+  document.getElementById('tgLink').href = TG + '?text=' + msg;
+
+  setTimeout(() => {
+    show('screen-final');
+    boom();
+  }, 500);
+
+  return false;
+}
+
+// Clear errors
+document.getElementById('inName').addEventListener('input', function() {
+  this.classList.remove('error');
+  document.getElementById('errName').classList.remove('visible');
+});
+ph.addEventListener('input', function() {
+  this.classList.remove('error');
+  document.getElementById('errPhone').classList.remove('visible');
+});
+
+// Confetti
+function boom() {
+  const C = ['#FFE066','#FF6B35','#2D6A4F','#40916C','#D8F3DC','#2AABEE'];
+  for (let i = 0; i < 50; i++) {
+    const p = document.createElement('div');
+    p.className = 'confetti-piece';
+    p.style.left = Math.random()*100+'vw';
+    p.style.background = C[Math.floor(Math.random()*C.length)];
+    p.style.width = (Math.random()*8+4)+'px';
+    p.style.height = (Math.random()*8+4)+'px';
+    p.style.borderRadius = Math.random()>0.5?'50%':'2px';
+    p.style.animationDuration = (Math.random()*2+2)+'s';
+    p.style.animationDelay = (Math.random()*1.5)+'s';
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), 5000);
+  }
+}
+</script>
+
+</body>
+</html>
