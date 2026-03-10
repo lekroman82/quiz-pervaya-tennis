@@ -12,6 +12,7 @@
 <meta name="theme-color" content="#ffffff">
 <meta name="format-detection" content="telephone=no">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎾</text></svg>">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
@@ -988,6 +989,43 @@ h1, h2, h3 { font-family: 'Manrope', sans-serif; }
 </div>
 
 <script>
+/* ===== SUPABASE — ПОДКЛЮЧЕНИЕ К БАЗЕ ДАННЫХ ===== */
+
+// Supabase-клиент: связь квиза с базой данных
+const SUPABASE_URL = 'https://cwjhdlzsgcwzpbpyrprm.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_PCoWawJ_ntw_KdtgtHJOTQ_pbozwmb2';
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ID школы «Первая» в базе данных
+const SCHOOL_ID = '11111111-1111-1111-1111-111111111111';
+
+// Уникальный ID сессии посетителя (для аналитики)
+const SESSION_ID = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2);
+
+// UTM-параметры из URL рекламы
+const urlParams = new URLSearchParams(window.location.search);
+const UTM = {
+  source: urlParams.get('utm_source'),
+  medium: urlParams.get('utm_medium'),
+  campaign: urlParams.get('utm_campaign')
+};
+
+// Отправка аналитического события в Supabase (не блокирует интерфейс)
+function trackEvent(type, payload) {
+  sb.from('events').insert({
+    school_id: SCHOOL_ID,
+    session_id: SESSION_ID,
+    type: type,
+    payload: payload || null,
+    utm_source: UTM.source,
+    utm_medium: UTM.medium,
+    utm_campaign: UTM.campaign
+  }).then(() => {});
+}
+
+// Отправляем событие "visit" при загрузке страницы
+trackEvent('visit');
+
 /* ===== ДАННЫЕ И НАСТРОЙКИ ===== */
 
 // Объект для хранения ответов пользователя (ключ = номер вопроса)
@@ -1006,7 +1044,7 @@ function show(id) {
 }
 
 // Начало квиза — клик по CTA на стартовой
-function startQuiz() { show('screen-q1'); }
+function startQuiz() { trackEvent('quiz_start'); show('screen-q1'); }
 
 // Навигация назад (from = номер текущего вопроса, 0 = стартовая)
 function goBack(from) {
@@ -1020,6 +1058,7 @@ function pick(card, q) {
   card.parentElement.querySelectorAll('.a-card').forEach(c => c.classList.remove('selected'));
   card.classList.add('selected');
   ans[q] = card.dataset.v;
+  trackEvent('quiz_answer', { question: q, value: card.dataset.v });
   setTimeout(() => {
     if (q < 4) {
       // Перед показом Q4 — подставить карточки по сегменту из Q3
@@ -1215,6 +1254,20 @@ function send(e) {
 
   document.getElementById('tgLink').href = TG + '?text=' + msg;
 
+  // Сохраняем лид в Supabase
+  sb.from('leads').insert({
+    school_id: SCHOOL_ID,
+    name: name,
+    phone: phone,
+    answers: ans,
+    segment: ans[3] || null,
+    utm_source: UTM.source,
+    utm_medium: UTM.medium,
+    utm_campaign: UTM.campaign
+  }).then(() => {
+    trackEvent('form_submit');
+  });
+
   setTimeout(() => {
     show('screen-final');
     boom();
@@ -1231,6 +1284,11 @@ document.getElementById('inName').addEventListener('input', function() {
 ph.addEventListener('input', function() {
   this.classList.remove('error');
   document.getElementById('errPhone').classList.remove('visible');
+});
+
+/* ===== ОТСЛЕЖИВАНИЕ КЛИКА ПО TELEGRAM ===== */
+document.getElementById('tgLink').addEventListener('click', function() {
+  trackEvent('telegram_click');
 });
 
 /* ===== КОНФЕТТИ ===== */
