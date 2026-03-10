@@ -727,8 +727,8 @@ h1, h2, h3 { font-family: 'Manrope', sans-serif; }
 </div>
 
 <!-- ==================== ВОПРОС 3 ==================== -->
-<!-- "Что останавливает прямо сейчас?" -->
-<!-- По brief.md: варианты будут зависеть от ответа на Q1 (ветвление) -->
+<!-- "Для кого присматриваете теннис?" — сегментация -->
+<!-- Ответ определяет варианты карточек в Q4 (ветвление) -->
 <div class="screen" id="screen-q3">
   <div class="q-nav">
     <div class="q-nav-inner">
@@ -740,32 +740,32 @@ h1, h2, h3 { font-family: 'Manrope', sans-serif; }
     </div>
   </div>
   <div class="q-content">
-    <h2>Что останавливает прямо сейчас?</h2>
-    <p class="q-hint">Мы подготовимся к вашему первому визиту заранее</p>
+    <h2>Для кого присматриваете теннис?</h2>
+    <p class="q-hint">Подберём формат под ваш случай</p>
     <div class="answers-grid">
-      <div class="a-card" onclick="pick(this,3)" data-v="price">
-        <div class="a-icon">💰</div>
-        <div class="a-text">Боюсь, что это дорого</div>
+      <div class="a-card" onclick="pick(this,3)" data-v="self">
+        <div class="a-icon">🧑</div>
+        <div class="a-text">Для себя</div>
       </div>
-      <div class="a-card" onclick="pick(this,3)" data-v="late">
-        <div class="a-icon">🙄</div>
-        <div class="a-text">Думаю, что мне уже поздно начинать</div>
+      <div class="a-card" onclick="pick(this,3)" data-v="child">
+        <div class="a-icon">👧</div>
+        <div class="a-text">Для ребёнка</div>
       </div>
-      <div class="a-card" onclick="pick(this,3)" data-v="shy">
-        <div class="a-icon">🫣</div>
-        <div class="a-text">Стесняюсь — я же полный новичок</div>
+      <div class="a-card" onclick="pick(this,3)" data-v="teen">
+        <div class="a-icon">🤸</div>
+        <div class="a-text">Для подростка</div>
       </div>
-      <div class="a-card" onclick="pick(this,3)" data-v="nothing">
-        <div class="a-icon">💪</div>
-        <div class="a-text">Ничего — хочу начать как можно скорее!</div>
+      <div class="a-card" onclick="pick(this,3)" data-v="family">
+        <div class="a-icon">👨‍👩‍👧</div>
+        <div class="a-text">Для всей семьи</div>
       </div>
     </div>
   </div>
 </div>
 
 <!-- ==================== ВОПРОС 4 ==================== -->
-<!-- Сейчас: "Для кого присматриваете теннис?" -->
-<!-- По brief.md: будет заменён на "Где удобнее заниматься?" (локация) -->
+<!-- "Что останавливает прямо сейчас?" — барьер -->
+<!-- Карточки ответов подставляются динамически в JS на основе ответа Q3 (сегмент) -->
 <div class="screen" id="screen-q4">
   <div class="q-nav">
     <div class="q-nav-inner">
@@ -777,25 +777,10 @@ h1, h2, h3 { font-family: 'Manrope', sans-serif; }
     </div>
   </div>
   <div class="q-content">
-    <h2>Для кого присматриваете теннис?</h2>
-    <p class="q-hint">Подберём формат под ваш случай</p>
-    <div class="answers-grid">
-      <div class="a-card" onclick="pick(this,4)" data-v="self">
-        <div class="a-icon">🧑</div>
-        <div class="a-text">Для себя</div>
-      </div>
-      <div class="a-card" onclick="pick(this,4)" data-v="child">
-        <div class="a-icon">👧</div>
-        <div class="a-text">Для ребёнка</div>
-      </div>
-      <div class="a-card" onclick="pick(this,4)" data-v="teen">
-        <div class="a-icon">🤸</div>
-        <div class="a-text">Для подростка</div>
-      </div>
-      <div class="a-card" onclick="pick(this,4)" data-v="family">
-        <div class="a-icon">👨‍👩‍👧</div>
-        <div class="a-text">Для всей семьи</div>
-      </div>
+    <h2>Что останавливает прямо сейчас?</h2>
+    <p class="q-hint">Мы подготовимся к вашему первому визиту заранее</p>
+    <div class="answers-grid" id="q4-grid">
+      <!-- Карточки подставляются динамически функцией renderQ4() -->
     </div>
   </div>
 </div>
@@ -893,9 +878,56 @@ function pick(card, q) {
   card.classList.add('selected');
   ans[q] = card.dataset.v;
   setTimeout(() => {
-    if (q < 4) show('screen-q' + (q + 1));
-    else show('screen-result');
+    if (q < 4) {
+      // Перед показом Q4 — подставить карточки по сегменту из Q3
+      if (q === 3) renderQ4();
+      show('screen-q' + (q + 1));
+    } else {
+      show('screen-result');
+    }
   }, 300);
+}
+
+/* ===== ВЕТВЛЕНИЕ Q4: карточки зависят от сегмента (Q3) ===== */
+
+// Наборы карточек для Q4 ("Что останавливает?") по сегменту
+const Q4_CARDS = {
+  // Для ребёнка 4-8 лет
+  child: [
+    { icon: '💸', text: 'Боюсь, что это дорого', v: 'price' },
+    { icon: '😟', text: 'Ребёнок быстро бросит', v: 'will_quit' },
+    { icon: '👋', text: 'Будет не в своей тарелке', v: 'uncomfortable' },
+    { icon: '💪', text: 'Ничего — хочу начать!', v: 'nothing' }
+  ],
+  // Для подростка 9-16 лет
+  teen: [
+    { icon: '📱', text: 'Сидит в телефоне, не хочет никуда', v: 'phone' },
+    { icon: '🔄', text: 'Уже бросал(а) другие секции', v: 'quit_before' },
+    { icon: '💸', text: 'Боюсь, что это дорого', v: 'price' },
+    { icon: '💪', text: 'Ничего — хочу начать!', v: 'nothing' }
+  ],
+  // Для взрослого / семьи — одинаковый набор
+  self: [
+    { icon: '💸', text: 'Боюсь, что это дорого', v: 'price' },
+    { icon: '🙄', text: 'Думаю, что мне уже поздно начинать', v: 'too_late' },
+    { icon: '🫣', text: 'Стесняюсь — я же полный новичок', v: 'shy' },
+    { icon: '💪', text: 'Ничего — хочу начать!', v: 'nothing' }
+  ]
+};
+// family использует тот же набор, что и self
+Q4_CARDS.family = Q4_CARDS.self;
+
+// Подставить карточки Q4 на основе выбранного сегмента
+function renderQ4() {
+  const segment = ans[3] || 'self';
+  const cards = Q4_CARDS[segment] || Q4_CARDS.self;
+  const grid = document.getElementById('q4-grid');
+  grid.innerHTML = cards.map(c =>
+    `<div class="a-card" onclick="pick(this,4)" data-v="${c.v}">` +
+      `<div class="a-icon">${c.icon}</div>` +
+      `<div class="a-text">${c.text}</div>` +
+    `</div>`
+  ).join('');
 }
 
 /* ===== МАСКА ВВОДА ТЕЛЕФОНА ===== */
@@ -955,8 +987,8 @@ function send(e) {
   const L = {
     1: { expensive: 'Казалось дорого', others_said: 'Кто-то говорил так', hesitant: 'Не решался попробовать', never: 'Просто не пробовал' },
     2: { saw: 'Увидел как играют', friends: 'Друзья зовут', child: 'Ищу для ребёнка', dream: 'Давно мечтал' },
-    3: { price: 'Боюсь что дорого', late: 'Думаю что поздно', shy: 'Стесняюсь', nothing: 'Ничего не останавливает' },
-    4: { self: 'Для себя', child: 'Для ребёнка', teen: 'Для подростка', family: 'Для семьи' }
+    3: { self: 'Для себя', child: 'Для ребёнка', teen: 'Для подростка', family: 'Для семьи' },
+    4: { price: 'Боюсь что дорого', too_late: 'Думаю что поздно', shy: 'Стесняюсь', nothing: 'Ничего не останавливает', will_quit: 'Ребёнок бросит', uncomfortable: 'Не в своей тарелке', phone: 'Сидит в телефоне', quit_before: 'Бросал другие секции' }
   };
 
   const lb = (q, v) => (L[q] && L[q][v]) || v || '—';
