@@ -876,13 +876,13 @@ h1, h2, h3 { font-family: 'Manrope', sans-serif; }
 </div>
 
 <!-- ==================== ЭКРАН РЕЗУЛЬТАТА (подарки + форма) ==================== -->
-<!-- По brief.md: добавить персонализацию по сегменту (Q1) -->
+<!-- Персонализация: заголовок и описание подставляются по сегменту (Q3) через renderResult() -->
 <div class="screen" id="screen-result">
   <div class="result-wrap">
     <div class="result-inner">
-      <div class="result-badge">🎁 почти готово</div>
-      <h2>Ваш разбор готов — и мы добавили 2 подарка</h2>
-      <p class="result-desc">Оставьте контакты — отправим всё в Telegram за 2 минуты</p>
+      <div class="result-badge">🎁 ваш результат готов</div>
+      <h2 id="resultTitle"></h2>
+      <p class="result-desc" id="resultDesc"></p>
 
       <div class="gift">
         <div class="gift-header">
@@ -1047,8 +1047,40 @@ function runLoading() {
   setTimeout(() => { steps[1].classList.add('done'); steps[1].querySelector('.check').textContent = '✓'; }, 1200);
   setTimeout(() => { steps[2].classList.add('done'); steps[2].querySelector('.check').textContent = '✓'; }, 2000);
 
-  // Автопереход на результат
-  setTimeout(() => show('screen-result'), 2800);
+  // Автопереход на результат с персонализацией
+  setTimeout(() => {
+    renderResult();
+    show('screen-result');
+  }, 2800);
+}
+
+/* ===== ПЕРСОНАЛИЗАЦИЯ РЕЗУЛЬТАТА ===== */
+// 4 варианта заголовка и описания по сегменту (Q3)
+const RESULTS = {
+  child: {
+    title: 'Вашему ребёнку подойдёт программа «Юный теннисист»',
+    desc: 'Игровой формат для детей. Группы по 4-6 человек. Занятия 2-3 раза в неделю по 60 минут. Ракетку и мячи выдаём.'
+  },
+  teen: {
+    title: 'Вашему подростку подойдёт программа «Теннис для подростков»',
+    desc: 'Группы по возрастам: 9-12 и 13-16 лет. Без сравнений и давления. Видимый прогресс уже через 2-3 недели.'
+  },
+  self: {
+    title: 'Вам подойдёт программа «Теннис для взрослых с нуля»',
+    desc: 'Через 10 тренировок — уверенная игра. Группы по уровням. Гибкое расписание: утро, день, вечер.'
+  },
+  family: {
+    title: 'Вашей семье подойдёт программа «Семейный теннис»',
+    desc: 'Занятия для детей и взрослых. Можно заниматься вместе по выходным. Гибкое расписание под каждого.'
+  }
+};
+
+// Подставить персональный заголовок и описание на экран результата
+function renderResult() {
+  const segment = ans[3] || 'self';
+  const r = RESULTS[segment] || RESULTS.self;
+  document.getElementById('resultTitle').textContent = r.title;
+  document.getElementById('resultDesc').textContent = r.desc + ' Оставьте контакты — отправим подробности и 2 подарка в Telegram.';
 }
 
 /* ===== МАСКА ВВОДА ТЕЛЕФОНА ===== */
