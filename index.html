@@ -202,6 +202,11 @@ h1, h2, h3 { font-family: 'Manrope', sans-serif; }
   transition: background 0.15s;
 }
 .cta-btn:hover { background: var(--accent-hover); }
+.cta-btn { animation: ctaPulse 2s ease-in-out infinite; }
+@keyframes ctaPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(196, 90, 48, 0.4); }
+  50% { box-shadow: 0 0 0 12px rgba(196, 90, 48, 0); }
+}
 
 .cta-note {
   font-size: 13px;
