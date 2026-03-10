@@ -580,6 +580,81 @@ h1, h2, h3 { font-family: 'Manrope', sans-serif; }
   margin-top: 14px;
 }
 
+/* ===== ЭКРАН ЗАГРУЗКИ "Подбираем программу..." ===== */
+.loading-inner {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 60px 20px;
+  text-align: center;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-icon {
+  font-size: 48px;
+  margin-bottom: 24px;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+.loading-inner h2 {
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 32px;
+}
+
+.loading-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  text-align: left;
+  width: 100%;
+  margin-bottom: 32px;
+}
+
+.loading-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  color: var(--text-light);
+  transition: color 0.3s;
+}
+
+.loading-step.done {
+  color: var(--text);
+  animation: fadeIn 0.3s ease;
+}
+
+.loading-step .check {
+  width: 22px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.loading-bar {
+  width: 100%;
+  height: 4px;
+  background: var(--border);
+  border-radius: 100px;
+  overflow: hidden;
+}
+
+.loading-bar-fill {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, #2D6A4F, #40916C);
+  border-radius: 100px;
+  transition: width 2.5s linear;
+}
+
 /* Конфетти — частицы падают сверху на финальном экране */
 .confetti-piece {
   position: fixed;
@@ -785,6 +860,21 @@ h1, h2, h3 { font-family: 'Manrope', sans-serif; }
   </div>
 </div>
 
+<!-- ==================== ЭКРАН ЗАГРУЗКИ ==================== -->
+<!-- Labor illusion: создаёт ощущение анализа ответов, повышает ценность результата -->
+<div class="screen" id="screen-loading">
+  <div class="loading-inner">
+    <div class="loading-icon">🎾</div>
+    <h2>Подбираем программу...</h2>
+    <div class="loading-steps">
+      <div class="loading-step" id="ls1"><span class="check">○</span> Анализируем ваши ответы...</div>
+      <div class="loading-step" id="ls2"><span class="check">○</span> Подбираем подходящую группу...</div>
+      <div class="loading-step" id="ls3"><span class="check">○</span> Готовим персональные рекомендации...</div>
+    </div>
+    <div class="loading-bar"><div class="loading-bar-fill" id="loadingBar"></div></div>
+  </div>
+</div>
+
 <!-- ==================== ЭКРАН РЕЗУЛЬТАТА (подарки + форма) ==================== -->
 <!-- По brief.md: добавить персонализацию по сегменту (Q1) -->
 <div class="screen" id="screen-result">
@@ -883,7 +973,8 @@ function pick(card, q) {
       if (q === 3) renderQ4();
       show('screen-q' + (q + 1));
     } else {
-      show('screen-result');
+      show('screen-loading');
+      runLoading();
     }
   }, 300);
 }
@@ -928,6 +1019,36 @@ function renderQ4() {
       `<div class="a-text">${c.text}</div>` +
     `</div>`
   ).join('');
+}
+
+/* ===== ЭКРАН ЗАГРУЗКИ — анимация этапов + прогресс-бар ===== */
+// Запуск анимации: 3 этапа появляются по очереди, через 2.5 сек → экран результата
+function runLoading() {
+  const steps = [
+    document.getElementById('ls1'),
+    document.getElementById('ls2'),
+    document.getElementById('ls3')
+  ];
+  const bar = document.getElementById('loadingBar');
+
+  // Сброс состояния
+  steps.forEach(s => { s.classList.remove('done'); s.querySelector('.check').textContent = '○'; });
+  bar.style.transition = 'none';
+  bar.style.width = '0';
+
+  // Запуск прогресс-бара (плавное заполнение за 2.5 сек)
+  requestAnimationFrame(() => {
+    bar.style.transition = 'width 2.5s linear';
+    bar.style.width = '100%';
+  });
+
+  // Этапы появляются с задержкой
+  setTimeout(() => { steps[0].classList.add('done'); steps[0].querySelector('.check').textContent = '✓'; }, 400);
+  setTimeout(() => { steps[1].classList.add('done'); steps[1].querySelector('.check').textContent = '✓'; }, 1200);
+  setTimeout(() => { steps[2].classList.add('done'); steps[2].querySelector('.check').textContent = '✓'; }, 2000);
+
+  // Автопереход на результат
+  setTimeout(() => show('screen-result'), 2800);
 }
 
 /* ===== МАСКА ВВОДА ТЕЛЕФОНА ===== */
