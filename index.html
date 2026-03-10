@@ -339,7 +339,7 @@ h1, h2, h3 { font-family: 'Manrope', sans-serif; }
 
 .a-card {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
   padding: 18px 14px;
   background: var(--bg-gray);
@@ -372,11 +372,23 @@ h1, h2, h3 { font-family: 'Manrope', sans-serif; }
   flex-shrink: 0;
 }
 
+/* Обёртка для текста + подсказки внутри карточки */
+.a-body { display: flex; flex-direction: column; min-width: 0; }
+
 .a-text {
   font-size: 14px;
   font-weight: 500;
   line-height: 1.4;
   color: var(--text);
+}
+
+/* Подсказка внутри карточки ответа — серый текст под основным */
+.a-hint {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.45;
+  color: var(--text-light);
+  margin-top: 3px;
 }
 
 /* ===== ЭКРАН РЕЗУЛЬТАТА (персональная рекомендация + подарки + форма) ===== */
@@ -746,19 +758,31 @@ h1, h2, h3 { font-family: 'Manrope', sans-serif; }
     <div class="answers-grid">
       <div class="a-card" onclick="pick(this,1)" data-v="expensive">
         <div class="a-icon">💸</div>
-        <div class="a-text">Да — казалось, что это дорого и не для нашей семьи</div>
+        <div class="a-body">
+          <div class="a-text">Да — казалось, что это дорого и не для нашей семьи</div>
+          <div class="a-hint">Так думали 8 из 10 наших учеников. А потом удивились</div>
+        </div>
       </div>
       <div class="a-card" onclick="pick(this,1)" data-v="others_said">
         <div class="a-icon">❤️</div>
-        <div class="a-text">Да — кто-то из знакомых или сам(а) так думал(а)</div>
+        <div class="a-body">
+          <div class="a-text">Да — кто-то из знакомых или сам(а) так думал(а)</div>
+          <div class="a-hint">Стереотипы — штука сильная. Но реальность другая</div>
+        </div>
       </div>
       <div class="a-card" onclick="pick(this,1)" data-v="hesitant">
         <div class="a-icon">😐</div>
-        <div class="a-text">Нет, но всё равно не решался(ась) попробовать</div>
+        <div class="a-body">
+          <div class="a-text">Нет, но всё равно не решался(ась) попробовать</div>
+          <div class="a-hint">Первый шаг — самый сложный. Вы его уже делаете</div>
+        </div>
       </div>
       <div class="a-card" onclick="pick(this,1)" data-v="never">
         <div class="a-icon">💪</div>
-        <div class="a-text">Нет — просто никогда не пробовал(а)</div>
+        <div class="a-body">
+          <div class="a-text">Нет — просто никогда не пробовал(а)</div>
+          <div class="a-hint">Отличный момент начать — 80% учеников были в той же точке</div>
+        </div>
       </div>
     </div>
   </div>
@@ -783,19 +807,31 @@ h1, h2, h3 { font-family: 'Manrope', sans-serif; }
     <div class="answers-grid">
       <div class="a-card" onclick="pick(this,2)" data-v="saw">
         <div class="a-icon">🎾</div>
-        <div class="a-text">Увидел(а), как кто-то играет — и захотелось тоже</div>
+        <div class="a-body">
+          <div class="a-text">Увидел(а), как кто-то играет — и захотелось тоже</div>
+          <div class="a-hint">Теннис затягивает с первого удара — проверено</div>
+        </div>
       </div>
       <div class="a-card" onclick="pick(this,2)" data-v="friends">
         <div class="a-icon">👥</div>
-        <div class="a-text">Друзья или коллеги играют — хочу с ними</div>
+        <div class="a-body">
+          <div class="a-text">Друзья или коллеги играют — хочу с ними</div>
+          <div class="a-hint">Играть компанией — вдвойне интереснее</div>
+        </div>
       </div>
       <div class="a-card" onclick="pick(this,2)" data-v="child">
         <div class="a-icon">👶</div>
-        <div class="a-text">Ищу секцию для ребёнка — теннис в списке</div>
+        <div class="a-body">
+          <div class="a-text">Ищу секцию для ребёнка — теннис в списке</div>
+          <div class="a-hint">Берём с 4 лет. Развивает координацию, реакцию и дисциплину</div>
+        </div>
       </div>
       <div class="a-card" onclick="pick(this,2)" data-v="dream">
         <div class="a-icon">⭐</div>
-        <div class="a-text">Просто давно мечтал(а) — и решился(-ась)</div>
+        <div class="a-body">
+          <div class="a-text">Просто давно мечтал(а) — и решился(-ась)</div>
+          <div class="a-hint">Лучшее время начать — прямо сейчас</div>
+        </div>
       </div>
     </div>
   </div>
@@ -820,19 +856,31 @@ h1, h2, h3 { font-family: 'Manrope', sans-serif; }
     <div class="answers-grid">
       <div class="a-card" onclick="pick(this,3)" data-v="self">
         <div class="a-icon">🧑</div>
-        <div class="a-text">Для себя</div>
+        <div class="a-body">
+          <div class="a-text">Для себя</div>
+          <div class="a-hint">80% наших учеников начали с нуля после 30</div>
+        </div>
       </div>
       <div class="a-card" onclick="pick(this,3)" data-v="child">
         <div class="a-icon">👧</div>
-        <div class="a-text">Для ребёнка</div>
+        <div class="a-body">
+          <div class="a-text">Для ребёнка</div>
+          <div class="a-hint">Берём с 4 лет. Мини-группы, игровой формат</div>
+        </div>
       </div>
       <div class="a-card" onclick="pick(this,3)" data-v="teen">
         <div class="a-icon">🤸</div>
-        <div class="a-text">Для подростка</div>
+        <div class="a-body">
+          <div class="a-text">Для подростка</div>
+          <div class="a-hint">Группы по возрастам. Даже если бросил другие секции</div>
+        </div>
       </div>
       <div class="a-card" onclick="pick(this,3)" data-v="family">
         <div class="a-icon">👨‍👩‍👧</div>
-        <div class="a-text">Для всей семьи</div>
+        <div class="a-body">
+          <div class="a-text">Для всей семьи</div>
+          <div class="a-hint">Занятия для детей и взрослых. Можно вместе по выходным</div>
+        </div>
       </div>
     </div>
   </div>
@@ -983,26 +1031,26 @@ function pick(card, q) {
 
 // Наборы карточек для Q4 ("Что останавливает?") по сегменту
 const Q4_CARDS = {
-  // Для ребёнка 4-8 лет
+  // Для ребёнка
   child: [
-    { icon: '💸', text: 'Боюсь, что это дорого', v: 'price' },
-    { icon: '😟', text: 'Ребёнок быстро бросит', v: 'will_quit' },
-    { icon: '👋', text: 'Будет не в своей тарелке', v: 'uncomfortable' },
-    { icon: '💪', text: 'Ничего — хочу начать!', v: 'nothing' }
+    { icon: '💸', text: 'Боюсь, что это дорого', hint: 'Ракетку и мячи выдаём. Первое занятие бесплатное', v: 'price' },
+    { icon: '😟', text: 'Ребёнок быстро бросит', hint: '93% детей продолжают после первого месяца — тренер работает через игру', v: 'will_quit' },
+    { icon: '👋', text: 'Будет не в своей тарелке', hint: 'Мини-группы детей одного возраста. Дружелюбная атмосфера', v: 'uncomfortable' },
+    { icon: '💪', text: 'Ничего — хочу начать!', hint: 'Отлично! Осталось оставить контакты', v: 'nothing' }
   ],
-  // Для подростка 9-16 лет
+  // Для подростка
   teen: [
-    { icon: '📱', text: 'Сидит в телефоне, не хочет никуда', v: 'phone' },
-    { icon: '🔄', text: 'Уже бросал(а) другие секции', v: 'quit_before' },
-    { icon: '💸', text: 'Боюсь, что это дорого', v: 'price' },
-    { icon: '💪', text: 'Ничего — хочу начать!', v: 'nothing' }
+    { icon: '📱', text: 'Сидит в телефоне, не хочет никуда', hint: 'На корте телефон забывается через 5 минут. Азарт сильнее', v: 'phone' },
+    { icon: '🔄', text: 'Уже бросал(а) другие секции', hint: 'Теннис — индивидуальный спорт. Виден прогресс, нет скамейки запасных', v: 'quit_before' },
+    { icon: '💸', text: 'Боюсь, что это дорого', hint: 'Первое занятие бесплатное, ракетку выдаём. Попробуйте без рисков', v: 'price' },
+    { icon: '💪', text: 'Ничего — хочу начать!', hint: 'Отлично! Осталось оставить контакты', v: 'nothing' }
   ],
-  // Для взрослого / семьи — одинаковый набор
+  // Для взрослого / семьи
   self: [
-    { icon: '💸', text: 'Боюсь, что это дорого', v: 'price' },
-    { icon: '🙄', text: 'Думаю, что мне уже поздно начинать', v: 'too_late' },
-    { icon: '🫣', text: 'Стесняюсь — я же полный новичок', v: 'shy' },
-    { icon: '💪', text: 'Ничего — хочу начать!', v: 'nothing' }
+    { icon: '💸', text: 'Боюсь, что это дорого', hint: 'Первое занятие бесплатное. Абонемент — дешевле, чем кажется', v: 'price' },
+    { icon: '🙄', text: 'Думаю, что мне уже поздно начинать', hint: 'Большинство наших учеников начали после 30. А кто-то — после 55', v: 'too_late' },
+    { icon: '🫣', text: 'Стесняюсь — я же полный новичок', hint: '80% учеников начинали с нуля. Группы по уровням — не будете белой вороной', v: 'shy' },
+    { icon: '💪', text: 'Ничего — хочу начать!', hint: 'Отлично! Осталось оставить контакты', v: 'nothing' }
   ]
 };
 // family использует тот же набор, что и self
@@ -1016,7 +1064,10 @@ function renderQ4() {
   grid.innerHTML = cards.map(c =>
     `<div class="a-card" onclick="pick(this,4)" data-v="${c.v}">` +
       `<div class="a-icon">${c.icon}</div>` +
-      `<div class="a-text">${c.text}</div>` +
+      `<div class="a-body">` +
+        `<div class="a-text">${c.text}</div>` +
+        `<div class="a-hint">${c.hint}</div>` +
+      `</div>` +
     `</div>`
   ).join('');
 }
