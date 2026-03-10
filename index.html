@@ -16,8 +16,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
+/* ===== СБРОС И ПЕРЕМЕННЫЕ ===== */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
+/* Цветовая палитра и базовые значения — менять здесь */
 :root {
   --bg: #FFFFFF;
   --bg-gray: #F5F5F5;
@@ -46,20 +48,23 @@ body {
 
 h1, h2, h3 { font-family: 'Manrope', sans-serif; }
 
-/* ===== SCREENS ===== */
+/* ===== ЭКРАНЫ — переключение видимости ===== */
+/* Все экраны скрыты по умолчанию. Активный экран показывается через класс .active */
 .screen { display: none; min-height: 100vh; min-height: 100dvh; }
 .screen.active { display: flex; flex-direction: column; }
 
+/* Анимация появления экранов */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }
+/* Анимация падения конфетти на финальном экране */
 @keyframes confettiFall {
   0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
   100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
 }
 
-/* ===== START SCREEN ===== */
+/* ===== СТАРТОВЫЙ ЭКРАН ===== */
 .start-inner {
   max-width: 520px;
   margin: 0 auto;
@@ -111,7 +116,7 @@ h1, h2, h3 { font-family: 'Manrope', sans-serif; }
   margin-right: auto;
 }
 
-/* Stats */
+/* Блок статистики (социальное доказательство) */
 .stats {
   display: flex;
   flex-direction: column;
@@ -138,7 +143,7 @@ h1, h2, h3 { font-family: 'Manrope', sans-serif; }
   font-size: 16px;
 }
 
-/* Reviews 2-col */
+/* Отзывы — 2 колонки на десктопе, 1 на мобильном */
 .reviews-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -171,7 +176,7 @@ h1, h2, h3 { font-family: 'Manrope', sans-serif; }
   font-weight: 600;
 }
 
-/* Counter */
+/* Счётчик "Уже прошли тест: X человек" */
 .counter {
   font-size: 14px;
   color: var(--text-secondary);
@@ -179,7 +184,7 @@ h1, h2, h3 { font-family: 'Manrope', sans-serif; }
 }
 .counter strong { color: var(--text); font-weight: 700; }
 
-/* CTA */
+/* Главная CTA-кнопка */
 .cta-btn {
   display: block;
   width: 100%;
@@ -211,7 +216,7 @@ h1, h2, h3 { font-family: 'Manrope', sans-serif; }
   margin-bottom: 32px;
 }
 
-/* Learn section */
+/* Блок "Вы узнаете в конце теста" */
 .learn-block {
   border-top: 1px solid var(--border);
   padding-top: 24px;
@@ -246,7 +251,8 @@ h1, h2, h3 { font-family: 'Manrope', sans-serif; }
 
 .learn-item .ico { font-size: 16px; flex-shrink: 0; }
 
-/* ===== QUESTION NAV BAR ===== */
+/* ===== НАВБАР ВОПРОСОВ (sticky сверху) ===== */
+/* Содержит: кнопку "Назад", номер шага, прогресс-бар */
 .q-nav {
   position: sticky;
   top: 0;
@@ -301,7 +307,7 @@ h1, h2, h3 { font-family: 'Manrope', sans-serif; }
   transition: width 0.3s ease;
 }
 
-/* ===== QUESTION CONTENT ===== */
+/* ===== КОНТЕНТ ВОПРОСА (заголовок + подсказка + карточки) ===== */
 .q-content {
   max-width: 520px;
   margin: 0 auto;
@@ -324,7 +330,7 @@ h1, h2, h3 { font-family: 'Manrope', sans-serif; }
   margin-bottom: 28px;
 }
 
-/* Answer grid 2x2 */
+/* Сетка карточек ответов — 2 колонки на десктопе, 1 на мобильном (<480px) */
 .answers-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -373,7 +379,7 @@ h1, h2, h3 { font-family: 'Manrope', sans-serif; }
   color: var(--text);
 }
 
-/* ===== RESULT SCREEN ===== */
+/* ===== ЭКРАН РЕЗУЛЬТАТА (персональная рекомендация + подарки + форма) ===== */
 .result-wrap {
   background: var(--bg-gray);
   flex: 1;
@@ -412,7 +418,7 @@ h1, h2, h3 { font-family: 'Manrope', sans-serif; }
   margin-bottom: 28px;
 }
 
-/* Gift cards */
+/* Карточки подарков (видеоразбор + гайд) */
 .gift {
   border: 1.5px solid var(--border);
   border-radius: var(--radius);
@@ -461,7 +467,7 @@ h1, h2, h3 { font-family: 'Manrope', sans-serif; }
   color: var(--text-light);
 }
 
-/* Form */
+/* Форма сбора контактов (имя + телефон) */
 .form-area { margin-top: 20px; text-align: left; }
 
 .f-group { margin-bottom: 10px; }
@@ -515,7 +521,7 @@ h1, h2, h3 { font-family: 'Manrope', sans-serif; }
   line-height: 1.5;
 }
 
-/* ===== FINAL SCREEN ===== */
+/* ===== ФИНАЛЬНЫЙ ЭКРАН (конфетти + кнопка Telegram) ===== */
 .final-inner {
   max-width: 480px;
   margin: 0 auto;
@@ -574,7 +580,7 @@ h1, h2, h3 { font-family: 'Manrope', sans-serif; }
   margin-top: 14px;
 }
 
-/* Confetti */
+/* Конфетти — частицы падают сверху на финальном экране */
 .confetti-piece {
   position: fixed;
   top: -20px;
@@ -583,7 +589,7 @@ h1, h2, h3 { font-family: 'Manrope', sans-serif; }
   animation: confettiFall linear forwards;
 }
 
-/* ===== RESPONSIVE ===== */
+/* ===== АДАПТИВ ===== */
 @media (min-width: 640px) {
   .start-inner h1 { font-size: 40px; }
   .q-content h2 { font-size: 30px; }
@@ -598,7 +604,8 @@ h1, h2, h3 { font-family: 'Manrope', sans-serif; }
 </head>
 <body>
 
-<!-- ==================== START SCREEN ==================== -->
+<!-- ==================== СТАРТОВЫЙ ЭКРАН ==================== -->
+<!-- Первый экран: заголовок, соцдоказательства, отзывы, CTA -->
 <div class="screen active" id="screen-start">
   <div class="start-inner">
 
@@ -645,7 +652,9 @@ h1, h2, h3 { font-family: 'Manrope', sans-serif; }
   </div>
 </div>
 
-<!-- ==================== Q1 ==================== -->
+<!-- ==================== ВОПРОС 1 ==================== -->
+<!-- Сейчас: "Вам говорили, что теннис не для вас?" -->
+<!-- По brief.md: будет заменён на "Для кого подбираем?" (сегментация) -->
 <div class="screen" id="screen-q1">
   <div class="q-nav">
     <div class="q-nav-inner">
@@ -680,7 +689,9 @@ h1, h2, h3 { font-family: 'Manrope', sans-serif; }
   </div>
 </div>
 
-<!-- ==================== Q2 ==================== -->
+<!-- ==================== ВОПРОС 2 ==================== -->
+<!-- Сейчас: "Что привело вас к нам?" -->
+<!-- По brief.md: будет заменён на "Что развивает теннис?" (образовательный) -->
 <div class="screen" id="screen-q2">
   <div class="q-nav">
     <div class="q-nav-inner">
@@ -715,7 +726,9 @@ h1, h2, h3 { font-family: 'Manrope', sans-serif; }
   </div>
 </div>
 
-<!-- ==================== Q3 ==================== -->
+<!-- ==================== ВОПРОС 3 ==================== -->
+<!-- "Что останавливает прямо сейчас?" -->
+<!-- По brief.md: варианты будут зависеть от ответа на Q1 (ветвление) -->
 <div class="screen" id="screen-q3">
   <div class="q-nav">
     <div class="q-nav-inner">
@@ -750,7 +763,9 @@ h1, h2, h3 { font-family: 'Manrope', sans-serif; }
   </div>
 </div>
 
-<!-- ==================== Q4 ==================== -->
+<!-- ==================== ВОПРОС 4 ==================== -->
+<!-- Сейчас: "Для кого присматриваете теннис?" -->
+<!-- По brief.md: будет заменён на "Где удобнее заниматься?" (локация) -->
 <div class="screen" id="screen-q4">
   <div class="q-nav">
     <div class="q-nav-inner">
@@ -785,7 +800,8 @@ h1, h2, h3 { font-family: 'Manrope', sans-serif; }
   </div>
 </div>
 
-<!-- ==================== RESULT (form + gifts) ==================== -->
+<!-- ==================== ЭКРАН РЕЗУЛЬТАТА (подарки + форма) ==================== -->
+<!-- По brief.md: добавить персонализацию по сегменту (Q1) -->
 <div class="screen" id="screen-result">
   <div class="result-wrap">
     <div class="result-inner">
@@ -828,7 +844,8 @@ h1, h2, h3 { font-family: 'Manrope', sans-serif; }
   </div>
 </div>
 
-<!-- ==================== FINAL ==================== -->
+<!-- ==================== ФИНАЛЬНЫЙ ЭКРАН ==================== -->
+<!-- Конфетти + кнопка "Забрать подарки в Telegram" -->
 <div class="screen" id="screen-final">
   <div class="final-inner">
     <div class="final-icon">🎉</div>
@@ -843,23 +860,34 @@ h1, h2, h3 { font-family: 'Manrope', sans-serif; }
 </div>
 
 <script>
+/* ===== ДАННЫЕ И НАСТРОЙКИ ===== */
+
+// Объект для хранения ответов пользователя (ключ = номер вопроса)
 const ans = {};
+
+// Ссылка на Telegram — личный аккаунт, бот-нейропродавец подключается автоматически
 const TG = 'https://t.me/Roman_Lekomtsev';
 
+/* ===== НАВИГАЦИЯ МЕЖДУ ЭКРАНАМИ ===== */
+
+// Переключить активный экран по id
 function show(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo({ top: 0, behavior: 'instant' });
 }
 
+// Начало квиза — клик по CTA на стартовой
 function startQuiz() { show('screen-q1'); }
 
+// Навигация назад (from = номер текущего вопроса, 0 = стартовая)
 function goBack(from) {
   if (from === 0) show('screen-start');
   else if (from === 4) show('screen-q4');
   else show('screen-q' + from);
 }
 
+// Выбор ответа: подсветка карточки + сохранение + автопереход через 300мс
 function pick(card, q) {
   card.parentElement.querySelectorAll('.a-card').forEach(c => c.classList.remove('selected'));
   card.classList.add('selected');
@@ -870,7 +898,8 @@ function pick(card, q) {
   }, 300);
 }
 
-// Phone mask
+/* ===== МАСКА ВВОДА ТЕЛЕФОНА ===== */
+// Автоформатирование: +7 (XXX) XXX-XX-XX, подмена "8" на "7"
 const ph = document.getElementById('inPhone');
 ph.addEventListener('input', function() {
   let v = this.value.replace(/\D/g, '');
@@ -889,7 +918,8 @@ ph.addEventListener('keydown', function(e) {
   if (e.key === 'Backspace' && this.value.length <= 3) { e.preventDefault(); this.value = ''; }
 });
 
-// Submit
+/* ===== ОТПРАВКА ФОРМЫ ===== */
+// Валидация → формирование Telegram-ссылки с ответами → переход на финальный экран
 function send(e) {
   e.preventDefault();
   const name = document.getElementById('inName').value.trim();
@@ -921,6 +951,7 @@ function send(e) {
   btn.disabled = true;
   btn.textContent = 'Отправляем...';
 
+  // Человеко-читаемые лейблы ответов для Telegram-сообщения
   const L = {
     1: { expensive: 'Казалось дорого', others_said: 'Кто-то говорил так', hesitant: 'Не решался попробовать', never: 'Просто не пробовал' },
     2: { saw: 'Увидел как играют', friends: 'Друзья зовут', child: 'Ищу для ребёнка', dream: 'Давно мечтал' },
@@ -951,7 +982,7 @@ function send(e) {
   return false;
 }
 
-// Clear errors
+/* ===== ОЧИСТКА ОШИБОК ПРИ ВВОДЕ ===== */
 document.getElementById('inName').addEventListener('input', function() {
   this.classList.remove('error');
   document.getElementById('errName').classList.remove('visible');
@@ -961,7 +992,8 @@ ph.addEventListener('input', function() {
   document.getElementById('errPhone').classList.remove('visible');
 });
 
-// Confetti
+/* ===== КОНФЕТТИ ===== */
+// 50 частиц с CSS-анимацией, автоудаление через 5 сек
 function boom() {
   const C = ['#FFE066','#FF6B35','#2D6A4F','#40916C','#D8F3DC','#2AABEE'];
   for (let i = 0; i < 50; i++) {
