@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Как начать играть в теннис с нуля — Школа «Первая»</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --green:        #2D7A3A;
+      --green-light:  #E8F5EC;
+      --yellow:       #F5C842;
+      --text:         #1A1A2E;
+      --text-2:       #555570;
+      --border:       #E0E0EC;
+      --bg:           #F7F8FC;
+      --white:        #FFFFFF;
+      --radius:       14px;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .wrap {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 0 0 32px;
+    }
+
+    /* ── Шапка ── */
+    .header {
+      background: var(--green);
+      padding: 16px 20px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-ico {
+      font-size: 26px;
+    }
+
+    .logo-text .name {
+      font-size: 14px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.2;
+    }
+
+    .logo-text .city {
+      font-size: 11px;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .header-badge {
+      background: var(--yellow);
+      color: var(--text);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 5px 12px;
+      border-radius: 20px;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      background: var(--green);
+      padding: 0 20px 24px;
+      text-align: center;
+    }
+
+    .hero-emoji {
+      font-size: 52px;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .hero h1 {
+      font-size: 22px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.25;
+      margin-bottom: 8px;
+    }
+
+    .hero p {
+      font-size: 14px;
+      color: rgba(255,255,255,0.8);
+      line-height: 1.55;
+    }
+
+    /* ── Контент ── */
+    .content {
+      padding: 20px 16px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* ── Секция ── */
+    .section {
+      background: var(--white);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 16px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-num {
+      width: 28px;
+      height: 28px;
+      background: var(--green);
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .section-head h2 {
+      font-size: 15px;
+      font-weight: 800;
+      line-height: 1.3;
+    }
+
+    .section-body {
+      padding: 14px 16px;
+    }
+
+    /* ── Чеклист ── */
+    .check-block {
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+    }
+
+    .check-block:last-child { margin-bottom: 0; }
+
+    .check-block.yes { background: var(--green-light); }
+    .check-block.no  { background: #FFF0F0; }
+
+    .check-block-title {
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .check-block.yes .check-block-title { color: var(--green); }
+    .check-block.no  .check-block-title { color: #C0392B; }
+
+    .check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 14px;
+      line-height: 1.45;
+      margin-bottom: 8px;
+    }
+
+    .check-item:last-child { margin-bottom: 0; }
+
+    .ci-icon { flex-shrink: 0; font-size: 16px; }
+
+    .ci-text { flex: 1; }
+
+    .ci-text strong {
+      font-weight: 700;
+      display: block;
+      margin-bottom: 1px;
+    }
+
+    .ci-text span {
+      font-size: 12px;
+      color: var(--text-2);
+    }
+
+    /* ── Стоимость ── */
+    .cost-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .cost-card {
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .cost-card.free  { background: var(--green-light); }
+    .cost-card.once  { background: #FFFBE8; }
+    .cost-card.month { background: #EEF2FF; }
+
+    .cost-amount {
+      font-size: 28px;
+      font-weight: 800;
+      line-height: 1;
+      flex-shrink: 0;
+      min-width: 72px;
+    }
+
+    .cost-card.free  .cost-amount { color: var(--green); }
+    .cost-card.once  .cost-amount { color: #B8860B; }
+    .cost-card.month .cost-amount { color: #4338CA; }
+
+    .cost-info { flex: 1; }
+
+    .cost-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      margin-bottom: 3px;
+    }
+
+    .cost-card.free  .cost-label { color: var(--green); }
+    .cost-card.once  .cost-label { color: #B8860B; }
+    .cost-card.month .cost-label { color: #4338CA; }
+
+    .cost-desc {
+      font-size: 13px;
+      color: var(--text-2);
+      line-height: 1.45;
+    }
+
+    /* ── Таймлайн ── */
+    .timeline {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tl-item {
+      display: flex;
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .tl-aside {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 44px;
+      flex-shrink: 0;
+    }
+
+    .tl-dot {
+      width: 12px;
+      height: 12px;
+      background: var(--green);
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 4px;
+    }
+
+    .tl-line {
+      width: 2px;
+      background: var(--border);
+      flex: 1;
+      min-height: 8px;
+    }
+
+    .tl-item:last-child .tl-line { display: none; }
+
+    .tl-time {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--green);
+      white-space: nowrap;
+      margin-top: 2px;
+      text-align: right;
+      width: 100%;
+    }
+
+    .tl-body {
+      padding-bottom: 16px;
+      flex: 1;
+    }
+
+    .tl-title {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 3px;
+      padding-top: 1px;
+    }
+
+    .tl-desc {
+      font-size: 13px;
+      color: var(--text-2);
+      line-height: 1.55;
+    }
+
+    /* ── FAQ ── */
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .faq-item {
+      background: var(--bg);
+      border-radius: 10px;
+      padding: 12px 14px;
+      border-left: 3px solid var(--green);
+    }
+
+    .faq-q {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 5px;
+      line-height: 1.35;
+    }
+
+    .faq-a {
+      font-size: 13px;
+      color: var(--text-2);
+      line-height: 1.55;
+    }
+
+    /* ── CTA ── */
+    .cta {
+      background: var(--green);
+      border-radius: var(--radius);
+      padding: 20px 18px;
+      text-align: center;
+    }
+
+    .cta h3 {
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .cta p {
+      font-size: 13px;
+      color: rgba(255,255,255,0.8);
+      line-height: 1.55;
+      margin-bottom: 16px;
+    }
+
+    .cta-btn {
+      display: inline-block;
+      background: var(--yellow);
+      color: var(--text);
+      font-size: 15px;
+      font-weight: 800;
+      padding: 14px 28px;
+      border-radius: 30px;
+      text-decoration: none;
+      width: 100%;
+    }
+
+    /* ── Футер ── */
+    .footer {
+      text-align: center;
+      padding: 20px 16px 0;
+      font-size: 12px;
+      color: var(--text-2);
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Шапка -->
+  <div class="header">
+    <div class="header-logo">
+      <span class="logo-ico">🎾</span>
+      <div class="logo-text">
+        <div class="name">Школа тенниса «Первая»</div>
+        <div class="city">Саратов</div>
+      </div>
+    </div>
+    <div class="header-badge">Ваш подарок</div>
+  </div>
+
+  <!-- Hero -->
+  <div class="hero">
+    <span class="hero-emoji">🎾</span>
+    <h1>Как начать играть в теннис с нуля</h1>
+    <p>Что взять, сколько стоит и что будет на первом занятии — честно и по делу</p>
+  </div>
+
+  <div class="content">
+
+    <!-- 1. Что взять -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-num">1</div>
+        <h2>Что нужно на первое занятие</h2>
+      </div>
+      <div class="section-body">
+
+        <div class="check-block yes">
+          <div class="check-block-title">✅ Берите с собой</div>
+          <div class="check-item">
+            <span class="ci-icon">👟</span>
+            <div class="ci-text">
+              <strong>Кроссовки</strong>
+              <span>Любые, с нескользящей подошвой</span>
+            </div>
+          </div>
+          <div class="check-item">
+            <span class="ci-icon">👕</span>
+            <div class="ci-text">
+              <strong>Спортивная одежда</strong>
+              <span>Любая удобная</span>
+            </div>
+          </div>
+          <div class="check-item">
+            <span class="ci-icon">💧</span>
+            <div class="ci-text">
+              <strong>Вода</strong>
+              <span>0,5–1 литр</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="check-block no">
+          <div class="check-block-title">❌ НЕ нужно покупать</div>
+          <div class="check-item">
+            <span class="ci-icon">🏏</span>
+            <div class="ci-text">
+              <strong>Ракетку</strong>
+              <span>Выдаём бесплатно</span>
+            </div>
+          </div>
+          <div class="check-item">
+            <span class="ci-icon">🎱</span>
+            <div class="ci-text">
+              <strong>Мячи</strong>
+              <span>Они уже есть на корте</span>
+            </div>
+          </div>
+          <div class="check-item">
+            <span class="ci-icon">👗</span>
+            <div class="ci-text">
+              <strong>Теннисную форму</strong>
+              <span>Любая спортивная подойдёт</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 2. Стоимость -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-num">2</div>
+        <h2>Сколько это стоит на самом деле</h2>
+      </div>
+      <div class="section-body">
+        <div class="cost-cards">
+
+          <div class="cost-card free">
+            <div class="cost-amount">0 ₽</div>
+            <div class="cost-info">
+              <div class="cost-label">До первого занятия</div>
+              <div class="cost-desc">Ракетка и мячи — наши. Первое занятие бесплатно.</div>
+            </div>
+          </div>
+
+          <div class="cost-card once">
+            <div class="cost-amount">~4 000</div>
+            <div class="cost-info">
+              <div class="cost-label">Разово через 1–2 месяца</div>
+              <div class="cost-desc">Ракетка новичка. Покупается один раз на год.</div>
+            </div>
+          </div>
+
+          <div class="cost-card month">
+            <div class="cost-amount">≈ кино</div>
+            <div class="cost-info">
+              <div class="cost-label">В месяц</div>
+              <div class="cost-desc">Группа 2 раза в неделю. Аренда корта включена.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Таймлайн -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-num">3</div>
+        <h2>Первое занятие — по минутам</h2>
+      </div>
+      <div class="section-body">
+        <div class="timeline">
+
+          <div class="tl-item">
+            <div class="tl-aside">
+              <div class="tl-time">0–5</div>
+              <div class="tl-dot"></div>
+              <div class="tl-line"></div>
+            </div>
+            <div class="tl-body">
+              <div class="tl-title">Знакомство</div>
+              <div class="tl-desc">Тренер узнаёт ваш уровень и цели. Никаких тестов и оценок.</div>
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-aside">
+              <div class="tl-time">5–15</div>
+              <div class="tl-dot"></div>
+              <div class="tl-line"></div>
+            </div>
+            <div class="tl-body">
+              <div class="tl-title">Разминка</div>
+              <div class="tl-desc">Лёгкие упражнения. Привыкаете к корту и движению.</div>
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-aside">
+              <div class="tl-time">15–35</div>
+              <div class="tl-dot"></div>
+              <div class="tl-line"></div>
+            </div>
+            <div class="tl-body">
+              <div class="tl-title">Первые удары</div>
+              <div class="tl-desc">Тренер ставит хват и форхенд. Не бойтесь — всё объяснят пошагово.</div>
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-aside">
+              <div class="tl-time">35–45</div>
+              <div class="tl-dot"></div>
+              <div class="tl-line"></div>
+            </div>
+            <div class="tl-body">
+              <div class="tl-title">Игровые упражнения</div>
+              <div class="tl-desc">Задания на координацию. Уже чувствуете прогресс.</div>
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-aside">
+              <div class="tl-time">45–50</div>
+              <div class="tl-dot"></div>
+              <div class="tl-line"></div>
+            </div>
+            <div class="tl-body">
+              <div class="tl-title">Обратная связь</div>
+              <div class="tl-desc">Тренер говорит, что получилось, и объясняет следующие шаги.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. FAQ -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-num">4</div>
+        <h2>Частые вопросы</h2>
+      </div>
+      <div class="section-body">
+        <div class="faq-list">
+
+          <div class="faq-item">
+            <div class="faq-q">Я совсем не спортивный — подойдёт?</div>
+            <div class="faq-a">Теннис — это про координацию и реакцию, не про физподготовку. Развивается у всех.</div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q">Ребёнку нет опыта в спорте — берёте?</div>
+            <div class="faq-a">Берём с 4 лет, с полного нуля. Первые занятия — игра с мячом, без давления.</div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q">Что если не понравится?</div>
+            <div class="faq-a">Первое занятие бесплатно. Не понравится — просто не приходите второй раз. Никаких обязательств.</div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q">Когда будет виден прогресс?</div>
+            <div class="faq-a">Первый удар через корт — уже на первом занятии. Уверенная игра — через 4–6 недель.</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta">
+      <h3>Первое занятие — бесплатно</h3>
+      <p>Пишите в Telegram — выберем удобное время и запишем вас прямо сегодня</p>
+      <a class="cta-btn" href="https://t.me/Roman_Lekomtsev">Написать тренеру →</a>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    Школа тенниса «Первая» · Саратов
+  </div>
+
+</div>
+</body>
+</html>
