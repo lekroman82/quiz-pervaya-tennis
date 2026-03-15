@@ -48,6 +48,17 @@
     .error { background: #fff5f5; color: #c53030; padding: 16px; border-radius: 8px; font-size: 14px; }
     .updated { font-size: 12px; color: #a0aec0; text-align: right; margin-bottom: 12px; }
     .empty { color: #a0aec0; font-size: 13px; }
+    /* Экран ввода ключа */
+    #keyScreen { display: flex; align-items: center; justify-content: center; min-height: 80vh; }
+    .key-box { background: #fff; border-radius: 16px; padding: 32px 28px; max-width: 420px; width: 100%; box-shadow: 0 4px 20px rgba(0,0,0,.1); text-align: center; }
+    .key-box h2 { font-size: 18px; margin-bottom: 8px; color: #2d3748; }
+    .key-box p { font-size: 13px; color: #718096; margin-bottom: 20px; line-height: 1.5; }
+    .key-box input { width: 100%; border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 10px 14px; font-size: 13px; font-family: monospace; outline: none; margin-bottom: 12px; }
+    .key-box input:focus { border-color: #055F96; }
+    .key-box button { width: 100%; background: #055F96; color: #fff; border: none; border-radius: 8px; padding: 12px; font-size: 15px; cursor: pointer; font-weight: 600; }
+    .key-box button:hover { background: #044275; }
+    .key-hint { font-size: 11px; color: #a0aec0; margin-top: 12px; }
+    .key-hint a { color: #055F96; }
   </style>
 </head>
 <body>
@@ -57,7 +68,20 @@
   <span id="hUpdated"></span>
 </header>
 
-<div class="container">
+<!-- Экран ввода ключа -->
+<div id="keyScreen">
+  <div class="key-box">
+    <h2>🔐 Вход в аналитику</h2>
+    <p>Введите <strong>Service Role Key</strong> из Supabase.<br>Ключ хранится только в памяти браузера и не сохраняется.</p>
+    <input type="password" id="keyInput" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...">
+    <button onclick="initWithKey()">Открыть дашборд →</button>
+    <div class="key-hint">
+      Найти ключ: <a href="https://supabase.com/dashboard/project/cwjhdlzsgcwzpbpyrprm/settings/api" target="_blank">Supabase → Settings → API → service_role</a>
+    </div>
+  </div>
+</div>
+
+<div class="container" id="dashboard" style="display:none">
   <div class="period-bar">
     <button class="period-btn active" data-days="7">7 дней</button>
     <button class="period-btn" data-days="14">14 дней</button>
@@ -69,10 +93,25 @@
 
 <script>
 const SUPABASE_URL = 'https://cwjhdlzsgcwzpbpyrprm.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_PCoWawJ_ntw_KdtgtHJOTQ_pbozwmb2';
 const SCHOOL_ID = '11111111-1111-1111-1111-111111111111';
-const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let sb = null;
 let currentDays = 7;
+
+function initWithKey() {
+  const key = document.getElementById('keyInput').value.trim();
+  if (!key) { alert('Введите ключ'); return; }
+  sb = window.supabase.createClient(SUPABASE_URL, key);
+  document.getElementById('keyScreen').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+  load();
+}
+
+// Позволяет нажать Enter в поле ввода
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('keyInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') initWithKey();
+  });
+});
 
 const SEGMENT_LABELS = { child: 'Ребёнок', teen: 'Подросток', self: 'Себя', family: 'Семья' };
 const Q_LABELS = {
@@ -270,8 +309,6 @@ document.querySelectorAll('.period-btn').forEach(btn => {
     load();
   });
 });
-
-load();
 </script>
 </body>
 </html>
