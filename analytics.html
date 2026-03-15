@@ -115,6 +115,19 @@ function render(events) {
     answers[q][v] = (answers[q][v] || 0) + 1;
   });
 
+  // Лиды по ответу на вопрос 3
+  const leadSessions = new Set(events.filter(e => e.type === 'form_submit').map(e => e.session_id));
+  const q3bySession = {};
+  events.filter(e => e.type === 'quiz_answer' && e.payload && e.payload.question == 3).forEach(e => {
+    q3bySession[e.session_id] = e.payload.value;
+  });
+  const leadsByQ3 = {};
+  leadSessions.forEach(sid => {
+    const seg = q3bySession[sid] || 'unknown';
+    leadsByQ3[seg] = (leadsByQ3[seg] || 0) + 1;
+  });
+  const leadsQ3Total = Object.values(leadsByQ3).reduce((a,b) => a+b, 0) || 1;
+
   const utms = {};
   events.filter(e => e.type === 'visit').forEach(e => {
     const src = e.utm_source || '(прямой)';
@@ -152,9 +165,15 @@ function render(events) {
         return '<div class="funnel-row"><div class="funnel-label"><span>' + step.label + '</span><span>' + step.n + drop + '</span></div><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:' + w + '%;background:' + COLORS[i] + '"><span>' + w + '%</span></div></div></div>';
       }).join('')}
     </div>
+    <div class="section">
+      <h2>Лиды по сегменту (ответ на вопрос 3)</h2>
+      <table><thead><tr><th>Сегмент</th><th>Лидов</th><th>% от всех</th></tr></thead><tbody>
+        ${Object.entries(leadsByQ3).sort((a,b)=>b[1]-a[1]).map(([seg,cnt])=>'<tr><td><span class="badge badge-'+seg+'">'+(SEGMENT_LABELS[seg]||seg)+'</span></td><td><strong>'+cnt+'</strong></td><td>'+pct(cnt,leadsQ3Total)+'%</td></tr>').join('')||'<tr><td colspan="3" class="empty">Нет данных</td></tr>'}
+      </tbody></table>
+    </div>
     <div class="grid2">
       <div class="section">
-        <h2>Сегменты аудитории</h2>
+        <h2>Сегменты (все дошедшие до результата)</h2>
         <table><thead><tr><th>Сегмент</th><th>Чел.</th><th>%</th></tr></thead><tbody>
           ${Object.entries(segs).sort((a,b)=>b[1]-a[1]).map(([seg,cnt])=>'<tr><td><span class="badge badge-'+seg+'">'+(SEGMENT_LABELS[seg]||seg)+'</span></td><td>'+cnt+'</td><td>'+pct(cnt,segTotal)+'%</td></tr>').join('')||'<tr><td colspan="3" class="empty">Нет данных</td></tr>'}
         </tbody></table>
