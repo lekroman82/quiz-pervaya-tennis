@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Аналитика — ПШТ Квиз</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f4f8; color: #1a202c; }
+    header { background: #055F96; color: #fff; padding: 16px 24px; display: flex; align-items: center; gap: 12px; }
+    header h1 { font-size: 18px; font-weight: 600; }
+    header span { font-size: 13px; opacity: .7; margin-left: auto; }
+    .container { max-width: 900px; margin: 0 auto; padding: 24px 16px; }
+    .period-bar { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+    .period-btn { padding: 6px 16px; border-radius: 20px; border: 1.5px solid #055F96; background: #fff; color: #055F96; cursor: pointer; font-size: 14px; transition: .15s; }
+    .period-btn.active { background: #055F96; color: #fff; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 24px; }
+    .card { background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+    .card-label { font-size: 12px; color: #718096; margin-bottom: 6px; }
+    .card-value { font-size: 28px; font-weight: 700; color: #055F96; }
+    .card-sub { font-size: 12px; color: #a0aec0; margin-top: 4px; }
+    .section { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+    .section h2 { font-size: 15px; font-weight: 600; margin-bottom: 16px; color: #2d3748; }
+    .funnel-row { margin-bottom: 12px; }
+    .funnel-label { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px; }
+    .funnel-bar-wrap { background: #e2e8f0; border-radius: 6px; height: 28px; overflow: hidden; }
+    .funnel-bar { height: 100%; border-radius: 6px; transition: width .6s ease; display: flex; align-items: center; padding-left: 10px; }
+    .funnel-bar span { color: #fff; font-size: 12px; font-weight: 600; }
+    .funnel-drop { font-size: 11px; color: #e53e3e; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th { text-align: left; padding: 8px 10px; color: #718096; font-weight: 500; border-bottom: 2px solid #e2e8f0; }
+    td { padding: 8px 10px; border-bottom: 1px solid #f0f4f8; }
+    tr:last-child td { border-bottom: none; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+    .badge-child  { background: #bee3f8; color: #2b6cb0; }
+    .badge-teen   { background: #fefcbf; color: #975a16; }
+    .badge-self   { background: #c6f6d5; color: #276749; }
+    .badge-family { background: #fed7e2; color: #97266d; }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+    @media(max-width:600px){ .grid2 { grid-template-columns: 1fr; } }
+    .ans-q { font-size: 12px; color: #718096; margin: 12px 0 6px; font-weight: 600; }
+    .ans-row { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; font-size: 13px; }
+    .ans-bar-wrap { flex: 1; background: #e2e8f0; border-radius: 4px; height: 14px; overflow: hidden; }
+    .ans-bar { height: 100%; background: #F07D19; border-radius: 4px; transition: width .5s; }
+    .ans-val { font-size: 12px; color: #718096; min-width: 28px; text-align: right; }
+    .loading { text-align: center; padding: 60px; color: #718096; font-size: 15px; }
+    .error { background: #fff5f5; color: #c53030; padding: 16px; border-radius: 8px; font-size: 14px; }
+    .updated { font-size: 12px; color: #a0aec0; text-align: right; margin-bottom: 12px; }
+    .empty { color: #a0aec0; font-size: 13px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>📊 Аналитика квиза — «Первая Школа Тенниса»</h1>
+  <span id="hUpdated"></span>
+</header>
+
+<div class="container">
+  <div class="period-bar">
+    <button class="period-btn active" data-days="7">7 дней</button>
+    <button class="period-btn" data-days="14">14 дней</button>
+    <button class="period-btn" data-days="30">30 дней</button>
+    <button class="period-btn" data-days="0">Всё время</button>
+  </div>
+  <div id="main"><div class="loading">Загружаем данные…</div></div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://cwjhdlzsgcwzpbpyrprm.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_PCoWawJ_ntw_KdtgtHJOTQ_pbozwmb2';
+const SCHOOL_ID = '11111111-1111-1111-1111-111111111111';
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let currentDays = 7;
+
+const SEGMENT_LABELS = { child: 'Ребёнок', teen: 'Подросток', self: 'Себя', family: 'Семья' };
+const Q_LABELS = {
+  1: 'Вопрос 1: Говорили, что теннис не для вас?',
+  2: 'Вопрос 2: Что привело к нам?',
+  3: 'Вопрос 3: Для кого?',
+  4: 'Вопрос 4: Что останавливает?'
+};
+const ANSWER_LABELS = {
+  yes_told:'Да, говорили', not_sure:'Не уверен(а)', no_never:'Нет, никогда',
+  ad:'Реклама', recommend:'Рекомендация', saw:'Увидел(а) сам', long_wanted:'Давно хотел(а)',
+  child:'Ребёнок', teen:'Подросток', self:'Себя', family:'Семья',
+  price:'Цена', will_quit:'Быстро бросит', uncomfortable:'Не в своей тарелке',
+  nothing:'Ничего, хочу начать', phone:'Сидит в телефоне', quit_before:'Бросал раньше',
+  no_time:'Нет времени', fitness:'Физподготовка', age:'Возраст',
+  partner:'Нет партнёра', schedule:'Расписание',
+};
+const COLORS = ['#055F96','#F07D19','#96AF1E','#5b8dd9','#e88e3a'];
+
+function dateCutoff(days) {
+  if (!days) return null;
+  const d = new Date();
+  d.setDate(d.getDate() - days);
+  return d.toISOString();
+}
+function uniq(events, type) {
+  return new Set(events.filter(e => e.type === type).map(e => e.session_id)).size;
+}
+function pct(a, b) { return b ? Math.round(a * 100 / b) : 0; }
+
+function render(events) {
+  const visits   = uniq(events, 'visit');
+  const starts   = uniq(events, 'quiz_start');
+  const results  = uniq(events, 'result_view');
+  const forms    = uniq(events, 'form_submit');
+  const tgClicks = uniq(events, 'telegram_click');
+
+  const segs = {};
+  events.filter(e => e.type === 'result_view' && e.payload && e.payload.segment).forEach(e => {
+    const s = e.payload.segment;
+    segs[s] = (segs[s] || 0) + 1;
+  });
+  const segTotal = Object.values(segs).reduce((a,b) => a+b, 0) || 1;
+
+  const answers = {};
+  events.filter(e => e.type === 'quiz_answer').forEach(e => {
+    const q = e.payload && e.payload.question;
+    const v = e.payload && e.payload.value;
+    if (!q || !v) return;
+    if (!answers[q]) answers[q] = {};
+    answers[q][v] = (answers[q][v] || 0) + 1;
+  });
+
+  const utms = {};
+  events.filter(e => e.type === 'visit').forEach(e => {
+    const src = e.utm_source || '(прямой)';
+    if (!utms[src]) utms[src] = { visits: 0, leads: new Set() };
+    utms[src].visits++;
+  });
+  events.filter(e => e.type === 'form_submit').forEach(e => {
+    const src = e.utm_source || '(прямой)';
+    if (!utms[src]) utms[src] = { visits: 0, leads: new Set() };
+    utms[src].leads.add(e.session_id);
+  });
+
+  const funnelSteps = [
+    { label: '👁 Зашли на страницу',   n: visits },
+    { label: '▶️ Начали квиз',         n: starts },
+    { label: '🏆 Дошли до результата', n: results },
+    { label: '📋 Отправили форму',     n: forms },
+    { label: '💬 Перешли в Telegram',  n: tgClicks },
+  ];
+
+  document.getElementById('main').innerHTML = `
+    <div class="updated">Обновлено: ${new Date().toLocaleString('ru')}</div>
+
+    <div class="cards">
+      <div class="card">
+        <div class="card-label">Посетители</div>
+        <div class="card-value">${visits}</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Начали квиз</div>
+        <div class="card-value">${starts}</div>
+        <div class="card-sub">${pct(starts, visits)}% от зашедших</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Лиды (форма)</div>
+        <div class="card-value" style="color:#F07D19">${forms}</div>
+        <div class="card-sub">${pct(forms, visits)}% от зашедших</div>
+      </div>
+      <div class="card">
+        <div class="card-label">В Telegram</div>
+        <div class="card-value" style="color:#96AF1E">${tgClicks}</div>
+        <div class="card-sub">${pct(tgClicks, forms)}% от лидов</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Воронка по шагам</h2>
+      ${funnelSteps.map((step, i) => {
+        const prev = i === 0 ? step.n : funnelSteps[i-1].n;
+        const drop = i > 0 && prev ? ` <span class="funnel-drop">−${100 - pct(step.n, prev)}%</span>` : '';
+        const w = visits ? pct(step.n, visits) : 0;
+        return `
+          <div class="funnel-row">
+            <div class="funnel-label">
+              <span>${step.label}</span>
+              <span>${step.n}${drop}</span>
+            </div>
+            <div class="funnel-bar-wrap">
+              <div class="funnel-bar" style="width:${w}%;background:${COLORS[i]}">
+                <span>${w}%</span>
+              </div>
+            </div>
+          </div>`;
+      }).join('')}
+    </div>
+
+    <div class="grid2">
+      <div class="section">
+        <h2>Сегменты аудитории</h2>
+        <table>
+          <thead><tr><th>Сегмент</th><th>Чел.</th><th>%</th></tr></thead>
+          <tbody>
+            ${Object.entries(segs).sort((a,b) => b[1]-a[1]).map(([seg, cnt]) => `
+              <tr>
+                <td><span class="badge badge-${seg}">${SEGMENT_LABELS[seg] || seg}</span></td>
+                <td>${cnt}</td>
+                <td>${pct(cnt, segTotal)}%</td>
+              </tr>`).join('') || '<tr><td colspan="3" class="empty">Нет данных</td></tr>'}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section">
+        <h2>Источники трафика</h2>
+        <table>
+          <thead><tr><th>Источник</th><th>Визиты</th><th>Лиды</th></tr></thead>
+          <tbody>
+            ${Object.entries(utms).sort((a,b) => b[1].visits-a[1].visits).map(([src, d]) => `
+              <tr>
+                <td>${src}</td>
+                <td>${d.visits}</td>
+                <td>${d.leads.size}</td>
+              </tr>`).join('') || '<tr><td colspan="3" class="empty">Нет данных</td></tr>'}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Популярные ответы по вопросам</h2>
+      ${[1,2,3,4].map(q => {
+        const qData = answers[q];
+        if (!qData) return '<div class="ans-q">' + Q_LABELS[q] + '</div><div class="empty" style="margin-bottom:12px">Нет данных</div>';
+        const qTotal = Object.values(qData).reduce((a,b) => a+b, 0) || 1;
+        return '<div class="ans-q">' + Q_LABELS[q] + '</div>' +
+          Object.entries(qData).sort((a,b) => b[1]-a[1]).map(([v, cnt]) =>
+            '<div class="ans-row">' +
+              '<span style="min-width:150px;font-size:12px">' + (ANSWER_LABELS[v] || v) + '</span>' +
+              '<div class="ans-bar-wrap"><div class="ans-bar" style="width:' + pct(cnt,qTotal) + '%"></div></div>' +
+              '<span class="ans-val">' + cnt + '</span>' +
+            '</div>'
+          ).join('');
+      }).join('')}
+    </div>
+  `;
+}
+
+async function load() {
+  document.getElementById('main').innerHTML = '<div class="loading">Загружаем данные…</div>';
+  try {
+    let query = sb.from('events')
+      .select('type, session_id, payload, utm_source, utm_medium, utm_campaign, created_at')
+      .eq('school_id', SCHOOL_ID)
+      .order('created_at', { ascending: false })
+      .limit(50000);
+    const cutoff = dateCutoff(currentDays);
+    if (cutoff) query = query.gte('created_at', cutoff);
+    const { data, error } = await query;
+    if (error) throw error;
+    document.getElementById('hUpdated').textContent = new Date().toLocaleTimeString('ru');
+    render(data || []);
+  } catch(err) {
+    document.getElementById('main').innerHTML = '<div class="error">Ошибка загрузки: ' + err.message + '</div>';
+  }
+}
+
+document.querySelectorAll('.period-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentDays = parseInt(btn.dataset.days);
+    load();
+  });
+});
+
+load();
+</script>
+</body>
+</html>
