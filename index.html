@@ -1253,14 +1253,7 @@ function send(e) {
   const lb = (q, v) => (L[q] && L[q][v]) || v || '—';
 
   const msg = encodeURIComponent(
-    `Привет! Меня зовут ${name}, я прошёл(а) тест на сайте.\n` +
-    `📱 Телефон: ${phone}\n` +
-    `Хочу получить подарки (видеоразбор + гайд новичка).\n\n` +
-    `Мои ответы:\n` +
-    `• ${lb(1, ans[1])}\n` +
-    `• ${lb(2, ans[2])}\n` +
-    `• ${lb(3, ans[3])}\n` +
-    `• ${lb(4, ans[4])}`
+    `Здравствуйте! Прошёл(а) тест — хочу забрать подарки 🎾`
   );
 
   document.getElementById('tgLink').href = TG + '?text=' + msg;
