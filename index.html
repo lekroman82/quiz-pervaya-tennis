@@ -1272,6 +1272,21 @@ function send(e) {
     trackEvent('form_submit');
   });
 
+  // Отправляем лид в Telegram
+  fetch('/api/telegram', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      name: name,
+      phone: phone,
+      answers: ans,
+      segment: ans[3] || null,
+      utm_source: UTM.source,
+      utm_medium: UTM.medium,
+      utm_campaign: UTM.campaign
+    })
+  }).catch(() => {});
+
   setTimeout(() => {
     show('screen-final');
     boom();
