@@ -68,6 +68,7 @@
 
 <div class="container">
   <div class="period-bar">
+    <button class="period-btn" data-days="1">1 день</button>
     <button class="period-btn active" data-days="7">7 дней</button>
     <button class="period-btn" data-days="14">14 дней</button>
     <button class="period-btn" data-days="30">30 дней</button>
@@ -236,7 +237,7 @@ async function load() {
   document.getElementById('main').innerHTML = '<div class="loading">Загружаем данные…</div>';
   document.getElementById('leads-list').innerHTML = '<div class="loading" style="padding:20px">…</div>';
   try {
-    const res = await fetch('/api/analytics?days=' + currentDays);
+    const res = await fetch('/api/analytics.php?days=' + currentDays);
     if (!res.ok) {
       const err = await res.json().catch(() => ({ error: res.statusText }));
       throw new Error(err.error || res.statusText);
