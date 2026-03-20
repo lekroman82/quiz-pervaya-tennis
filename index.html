@@ -998,6 +998,7 @@ h1, h2, h3 { font-family: 'Oswald', sans-serif; }
       <svg viewBox="0 0 24 24" style="width:22px;height:22px;fill:#fff"><path d="M15.684 0H8.316C1.592 0 0 1.592 0 8.316v7.368C0 22.408 1.592 24 8.316 24h7.368C22.408 24 24 22.408 24 15.684V8.316C24 1.592 22.391 0 15.684 0zm3.692 17.123h-1.744c-.66 0-.864-.525-2.05-1.727-1.033-1-1.49-1.135-1.744-1.135-.356 0-.458.102-.458.593v1.575c0 .424-.135.678-1.253.678-1.846 0-3.896-1.12-5.339-3.202-2.17-3.048-2.763-5.339-2.763-5.814 0-.254.102-.491.593-.491h1.744c.44 0 .61.203.78.678.863 2.49 2.303 4.675 2.896 4.675.22 0 .322-.102.322-.66V9.721c-.068-1.186-.695-1.287-.695-1.71 0-.204.17-.407.44-.407h2.744c.373 0 .508.203.508.644v3.473c0 .372.17.508.271.508.22 0 .407-.136.814-.542 1.27-1.422 2.17-3.624 2.17-3.624.119-.254.322-.491.763-.491h1.744c.525 0 .644.27.525.644-.22 1.017-2.354 4.031-2.354 4.031-.186.305-.254.44 0 .78.186.254.796.779 1.203 1.253.745.847 1.32 1.558 1.473 2.05.17.491-.085.745-.576.745z"/></svg>
       Забрать подарки в VK
     </a>
+    <div id="copyToast" style="display:none;position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:12px 24px;border-radius:12px;font-size:15px;z-index:9999;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,.25);animation:fadeIn .3s">📋 Сообщение скопировано — вставьте в чат VK</div>
     <p class="final-note">Ответим в течение пары минут</p>
   </div>
 </div>
@@ -1266,7 +1267,7 @@ function send(e) {
     document.getElementById('vkLink').href = VK;
     document.getElementById('vkLink').style.display = 'inline-flex';
     document.getElementById('tgLink').style.display = 'none';
-    document.getElementById('finalText').textContent = 'Нажмите кнопку — в VK придёт видеоразбор, гайд и персональный разбор. А тренер ответит на любые вопросы о теннисе.';
+    document.getElementById('finalText').textContent = 'Нажмите кнопку — сообщение скопируется автоматически. Вставьте его в чат VK и получите видеоразбор, гайд и персональный разбор.';
   } else {
     document.getElementById('tgLink').href = TG + '?text=' + msg;
     document.getElementById('tgLink').style.display = 'inline-flex';
@@ -1325,8 +1326,16 @@ ph.addEventListener('input', function() {
 document.getElementById('tgLink').addEventListener('click', function() {
   trackEvent('telegram_click');
 });
-document.getElementById('vkLink').addEventListener('click', function() {
+document.getElementById('vkLink').addEventListener('click', function(e) {
+  e.preventDefault();
   trackEvent('vk_click');
+  const vkMsg = 'Здравствуйте! Прошёл(а) тест — хочу забрать подарки 🎾';
+  navigator.clipboard.writeText(vkMsg).then(function() {
+    const toast = document.getElementById('copyToast');
+    toast.style.display = 'block';
+    setTimeout(function() { toast.style.display = 'none'; }, 3000);
+  }).catch(function() {});
+  setTimeout(function() { window.open(VK, '_blank'); }, 300);
 });
 
 /* ===== КОНФЕТТИ ===== */
